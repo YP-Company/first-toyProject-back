@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(schema = "memoji", name = "comment")
+@Table(schema = "memoji", name = "tb_comment")
 public class Comment extends BaseEntity {
 
     @Id
