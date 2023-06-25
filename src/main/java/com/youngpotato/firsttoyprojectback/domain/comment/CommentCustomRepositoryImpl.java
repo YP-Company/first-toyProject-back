@@ -1,4 +1,4 @@
 package com.youngpotato.firsttoyprojectback.domain.comment;
 
-public class CommentCustomRepositoryImpl {
+public class CommentCustomRepositoryImpl implements CommentCustomRepository {
 }
