@@ -2,8 +2,7 @@ package com.youngpotato.firsttoyprojectback.domain.member;
 
 import com.youngpotato.firsttoyprojectback.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +11,9 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(schema = "memoji", name = "tb_member")
 public class Member extends BaseEntity {
@@ -27,8 +29,8 @@ public class Member extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "username", unique = true, nullable = false)
-    private String username;
+    @Column(name = "nickname", unique = true, nullable = false)
+    private String nickname;
 
     @Column(name = "phone_num")
     private String phoneNum;

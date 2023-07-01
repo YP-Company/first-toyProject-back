@@ -56,7 +56,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 .asString();
 
         if (username != null) {
-            Member member = memberRepository.findByUsername(username);
+            Member member = memberRepository.findByEmail(username);
 
             /**
              * 인증은 토근 검증시 끝.

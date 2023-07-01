@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
         /**
          * authenticate() 함수가 호출 되면 인증 프로바이더가 유저 디테일 서비스의
@@ -86,7 +86,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withSubject(principalDetailis.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtConstants.EXPIRATION_TIME))
                 .withClaim("id", principalDetailis.getMember().getMemberId())
-                .withClaim("username", principalDetailis.getMember().getUsername())
+                .withClaim("username", principalDetailis.getMember().getEmail())
                 .sign(Algorithm.HMAC512(JwtConstants.SECRET));
 
         response.addHeader(JwtConstants.HEADER_STRING, JwtConstants.TOKEN_PREFIX + jwtToken);
