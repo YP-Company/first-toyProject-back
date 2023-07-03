@@ -29,9 +29,6 @@ public class MemberDTO {
     private List<String> roles;
 
     public static MemberDTO from(Member member) {
-        if (member == null)
-            return null;
-
         return MemberDTO.builder()
                 .email(member.getEmail())
                 .cre_time(member.getCreTime())
