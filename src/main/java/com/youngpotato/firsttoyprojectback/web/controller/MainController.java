@@ -1,5 +1,10 @@
 package com.youngpotato.firsttoyprojectback.web.controller;
 
+import com.youngpotato.firsttoyprojectback.common.exception.ApiException;
+import com.youngpotato.firsttoyprojectback.common.exception.ErrorMessage;
+import com.youngpotato.firsttoyprojectback.domain.member.MemberRepository;
+import com.youngpotato.firsttoyprojectback.domain.post.Post;
+import com.youngpotato.firsttoyprojectback.domain.post.PostRepository;
 import com.youngpotato.firsttoyprojectback.service.MainService;
 import com.youngpotato.firsttoyprojectback.web.dto.MemberDTO;
 import com.youngpotato.firsttoyprojectback.web.dto.SignUpDTO;
@@ -14,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class MainController {
 
     private final MainService mainService;
+    private final MemberRepository memberRepository; //테스트용 선언
+    private final PostRepository postRepository; //테스트용 선언
 
     @GetMapping("/home")
     public String home() {
@@ -48,5 +55,25 @@ public class MainController {
     @GetMapping("/admin")
     public String users(Authentication authentication) {
         return "<h1>Admin</h1>";
+    }
+
+    // auditing test api
+    @PostMapping("/user/post")
+    public void savePost() {
+        Post post = new Post();
+        post.setMember(memberRepository.findByEmail("woojin97318@gmail.com"));
+        post.setTitle("testTitle2");
+        post.setContent("testContent2");
+
+        postRepository.save(post);
+    }
+    @PatchMapping("/user/post")
+    public void updatePost() {
+        Post post = postRepository.findById(1l)
+                .orElseThrow(() -> new ApiException("MemberId Not Found", ErrorMessage.USER_NOT_FOUND));
+
+        post.setContent("내용 수정2");
+
+        postRepository.save(post);
     }
 }
