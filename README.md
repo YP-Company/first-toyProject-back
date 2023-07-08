@@ -5,7 +5,7 @@
 ## Tech Stack
 
 - Java 17
-- Spring Boot 3.1.1
+- Spring Boot 3.0.4
 - Gradle
 - JPA
 - Mysql
