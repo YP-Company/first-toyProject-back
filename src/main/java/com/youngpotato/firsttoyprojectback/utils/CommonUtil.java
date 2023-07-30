@@ -1,6 +1,6 @@
 package com.youngpotato.firsttoyprojectback.utils;
 
-import com.youngpotato.firsttoyprojectback.auth.PrincipalDetails;
+import com.youngpotato.firsttoyprojectback.common.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

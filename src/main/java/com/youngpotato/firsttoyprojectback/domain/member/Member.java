@@ -29,7 +29,7 @@ public class Member extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nickname", unique = true, nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @Column(name = "phone_num")
@@ -43,6 +43,12 @@ public class Member extends BaseEntity {
 
     @Column(name = "roles", nullable = false)
     private String roles;
+
+    @Column(name = "provider", columnDefinition = "SYSTEM")
+    private String provider;
+
+    @Column(name = "provider_id")
+    private String providerId;
 
     public List<String> getRoleList() {
         if (this.roles.length() > 0) {

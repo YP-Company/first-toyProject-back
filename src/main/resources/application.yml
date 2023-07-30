@@ -12,8 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/memoji?serverTimezone=Asia/Seoul
     username: root
-    password: 1234  #전무직
-    # password: root  #이재우
+    password: 1234
 
   jpa:
     database: mysql
@@ -24,7 +23,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        #open-in-view: true
+#        open-in-view: true
+
+jwt:
+  header: Authorization
+  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
+  #echo 'young-potato-company-practice-project-back-end-spring-security-jwt-token-secret'|base64
+  secret: eW91bmctcG90YXRvLWNvbXBhbnktcHJhY3RpY2UtcHJvamVjdC1iYWNrLWVuZC1zcHJpbmctc2VjXJpdHktand0LXRva2VuLXNlY3JldAo=
+  token-validity-in-seconds: 86400
 
 logging:
   level:

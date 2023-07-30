@@ -1,4 +1,4 @@
-package com.youngpotato.firsttoyprojectback.web.dto;
+package com.youngpotato.firsttoyprojectback.dto;
 
 import com.youngpotato.firsttoyprojectback.domain.member.Member;
 import lombok.Builder;

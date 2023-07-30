@@ -1,5 +1,6 @@
-package com.youngpotato.firsttoyprojectback.audit;
+package com.youngpotato.firsttoyprojectback.common.audit;
 
+import com.youngpotato.firsttoyprojectback.common.Constants;
 import com.youngpotato.firsttoyprojectback.utils.CommonUtil;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
@@ -14,7 +15,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.getPrincipal().equals("anonymousUser")) {
-            return Optional.of("SYSTEM");
+            return Optional.of(Constants.SYSTEM_STRING);
         }
 
         return Optional.of(CommonUtil.getLoginMemberEmail());
