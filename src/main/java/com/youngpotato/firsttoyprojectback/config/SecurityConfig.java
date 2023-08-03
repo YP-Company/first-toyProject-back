@@ -1,15 +1,12 @@
 package com.youngpotato.firsttoyprojectback.config;
 
 import com.youngpotato.firsttoyprojectback.common.jwt.*;
-import com.youngpotato.firsttoyprojectback.domain.member.MemberRepository;
-import com.youngpotato.firsttoyprojectback.common.oauth2.PrincipalOauth2UserService;
+import com.youngpotato.firsttoyprojectback.common.auth.oauth2.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,9 +24,7 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-//    private final MemberRepository memberRepository;
-//    private final PrincipalOauth2UserService principalOauth2UserService;
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -39,6 +34,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        /**
+         * Header에 Authorization을 담고 통신하는 방법 2가지
+         * 1. Basic 방식
+         * id, pw를 담고 request를 보내기 때문에 보안에 취약하다고 한다.
+         * http 방식 -> id, pw 암호화 안된 상태로 통신
+         * https 방식 -> id, pw 암호화 된 상태로 통신
+         * 2. Bearer 방식
+         * id, pw로 생성된 token(jwt)을 담고 request를 보내기에 보안성이 위 방법보다는 좋다고 한다.
+         * 해당 토큰은 노출이 되어도 괜찮다.
+         * 물론 노출이 안되는게 좋다. 해당 토큰을 통해 로그인이 가능하다.
+         * 하지만 토큰의 유효시간이 있기 때문에 안전하다. 위 방법보다는 안전하다고 한다.
+         */
         http
                 .csrf(csrf -> csrf.disable()) // StateLess한 rest api를 개발할 것이므로 csrf 공격에 대한 옵션은 끈다.
 //                .addFilter(corsConfig.corsFilter())
@@ -80,60 +87,23 @@ public class SecurityConfig {
         http
                 .apply(new JwtSecurityConfig(tokenProvider));
 
-//        /**
-//         * Header에 Authorization을 담고 통신하는 방법 2가지
-//         * 1. Basic 방식
-//         * id, pw를 담고 request를 보내기 때문에 보안에 취약하다고 한다.
-//         * http 방식 -> id, pw 암호화 안된 상태로 통신
-//         * https 방식 -> id, pw 암호화 된 상태로 통신
-//         * 2. Bearer 방식
-//         * id, pw로 생성된 token(jwt)을 담고 request를 보내기에 보안성이 위 방법보다는 좋다고 한다.
-//         * 해당 토큰은 노출이 되어도 괜찮다.
-//         * 물론 노출이 안되는게 좋다. 해당 토큰을 통해 로그인이 가능하다.
-//         * 하지만 토큰의 유효시간이 있기 때문에 안전하다. 위 방법보다는 안전하다고 한다.
-//         */
-//        http
-//                // JWT을 위한 Filter를 아래에서 만들어 줄건데,
-//                // 이 Filter를 어느위치에서 사용하겠다고 등록을 해주어야 Filter가 작동이 됩니다.
-//                // security 로직에 JwtFilter 등록
-//                // .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-//                .apply(new MyCustomDsl());
-//
-//        // 에러 방지
-////        http
-////                .exceptionHandling()
-////                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-////                .accessDeniedHandler(new JwtAccessDeniedHandler());
-//
-//        // oauth2
-//        http.oauth2Login()
-//                .authorizationEndpoint()
-//                .baseUri("/oauth2/authorization") // 소셜 로그인 요청을 보내는 url을 설정
-//                .and()
-//                .redirectionEndpoint()
-//                .baseUri("/login/oauth2/code/*") // 소셜 인증 후 redirect 되는 uri
-//                .and()
-//                .userInfoEndpoint()
-//                .userService(principalOauth2UserService) // 회원 정보를 처리하기 위한 클래스 설정
-//                .and()
-//                .defaultSuccessUrl("/success-oauth");
-////                .successHandler() // oauth 인증 성공 시 호출되는 handler
-////                .failureHandler(); // oauth 인증 실패 시 호출되는 handler
-////                .authorizationRequestRepository()
+        /** oauth2 */
+        http
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization") // 소셜 로그인 요청을 보내는 url을 설정
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/login/oauth2/code/*") // 소셜 인증 후 redirect 되는 uri
+                .and()
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService) // 회원 정보를 처리하기 위한 클래스 설정
+                .and()
+                .defaultSuccessUrl("/api/v1/success-oauth");
+//                .successHandler() // oauth 인증 성공 시 호출되는 handler
+//                .failureHandler(); // oauth 인증 실패 시 호출되는 handler
+//                .authorizationRequestRepository()
 
         return http.build();
     }
-
-//    public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
-//
-//        @Override
-//        public void configure(HttpSecurity http) {
-//            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-//
-//            http
-//                    .addFilter(corsConfig.corsFilter())
-//                    .addFilter(new JwtAuthenticationFilter(authenticationManager))
-//                    .addFilter(new JwtAuthorizationFilter(authenticationManager, memberRepository));
-//        }
-//    }
 }
