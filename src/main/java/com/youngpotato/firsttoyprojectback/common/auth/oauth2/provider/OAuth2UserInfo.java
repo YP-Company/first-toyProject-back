@@ -1,4 +1,4 @@
-package com.youngpotato.firsttoyprojectback.common.auth.provider;
+package com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider;
 
 public interface OAuth2UserInfo {
 

@@ -1,10 +1,10 @@
-package com.youngpotato.firsttoyprojectback.common.oauth2;
+package com.youngpotato.firsttoyprojectback.common.auth.oauth2;
 
 import com.youngpotato.firsttoyprojectback.common.auth.PrincipalDetails;
-import com.youngpotato.firsttoyprojectback.common.auth.provider.GoogleUserInfo;
-import com.youngpotato.firsttoyprojectback.common.auth.provider.KakaoUserInfo;
-import com.youngpotato.firsttoyprojectback.common.auth.provider.NaverUserInfo;
-import com.youngpotato.firsttoyprojectback.common.auth.provider.OAuth2UserInfo;
+import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.GoogleUserInfo;
+import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.KakaoUserInfo;
+import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.NaverUserInfo;
+import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.OAuth2UserInfo;
 import com.youngpotato.firsttoyprojectback.domain.member.Member;
 import com.youngpotato.firsttoyprojectback.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        // OAuth 로그인 + 자동 회원가입 OR 로그인
         OAuth2UserInfo oAuth2UserInfo = null;
-
         if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
