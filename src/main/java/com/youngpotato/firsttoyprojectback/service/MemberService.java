@@ -9,7 +9,7 @@ import com.youngpotato.firsttoyprojectback.domain.member.MemberRepository;
 import com.youngpotato.firsttoyprojectback.dto.MemberDTO;
 import com.youngpotato.firsttoyprojectback.dto.SignUpDTO;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 일반 회원가입
@@ -32,7 +32,7 @@ public class MemberService {
         Member member = Member.builder()
                 .email(signUpDto.getEmail())
                 .password(signUpDto.getPassword())
-//                .password(passwordEncoder.encode(signUpDto.getPassword()))
+                .password(bCryptPasswordEncoder.encode(signUpDto.getPassword()))
                 .nickname(signUpDto.getNickname())
                 .phoneNum(signUpDto.getPhoneNum())
                 .birthDate(signUpDto.getBirthDate())
@@ -53,8 +53,7 @@ public class MemberService {
 //        String username = provider + "_" + providerId;
         String nickName = oAuth2UserInfo.getName();
         String email = oAuth2UserInfo.getEmail();
-        String password = "password"; // 무의미 값
-//        String password = passwordEncoder.encode("password"); // 무의미 값
+        String password = bCryptPasswordEncoder.encode("password"); // 무의미 값
         String role = "ROLE_USER";
 
         Member member = memberRepository.findByEmailAndProvider(email, provider);
