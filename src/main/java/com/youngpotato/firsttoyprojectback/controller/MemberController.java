@@ -1,6 +1,7 @@
 package com.youngpotato.firsttoyprojectback.controller;
 
 import com.youngpotato.firsttoyprojectback.common.Constants;
+import com.youngpotato.firsttoyprojectback.common.auth.PrincipalDetails;
 import com.youngpotato.firsttoyprojectback.common.jwt.TokenProvider;
 import com.youngpotato.firsttoyprojectback.dto.LoginDTO;
 import com.youngpotato.firsttoyprojectback.dto.MemberDTO;
@@ -59,6 +60,9 @@ public class MemberController {
 
     @GetMapping("/success-oauth")
     public ResponseEntity<?> createTokenForGoogle(@AuthenticationPrincipal OAuth2User oAuth2User) {
+        // TODO OAuth2 회원가입 후 인증 처리 필요
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if(oAuth2User == null) {
             System.out.println("받아올 정보가 없습니다.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("정보가 없어....");

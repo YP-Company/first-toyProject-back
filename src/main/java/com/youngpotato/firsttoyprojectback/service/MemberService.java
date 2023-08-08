@@ -48,13 +48,13 @@ public class MemberService {
      * 소셜 로그인 (회원가입)
      */
     public Member oauthSignup(OAuth2UserInfo oAuth2UserInfo) {
+        String email = oAuth2UserInfo.getEmail();
+        String password = bCryptPasswordEncoder.encode("password"); // 무의미 값
+        String nickName = oAuth2UserInfo.getName();
+        String role = "ROLE_USER";
         String provider = oAuth2UserInfo.getProvider(); // 플랫폼 명
         String providerId = oAuth2UserInfo.getProviderId(); // 플랫품 id
 //        String username = provider + "_" + providerId;
-        String nickName = oAuth2UserInfo.getName();
-        String email = oAuth2UserInfo.getEmail();
-        String password = bCryptPasswordEncoder.encode("password"); // 무의미 값
-        String role = "ROLE_USER";
 
         Member member = memberRepository.findByEmailAndProvider(email, provider);
         if (member == null) {

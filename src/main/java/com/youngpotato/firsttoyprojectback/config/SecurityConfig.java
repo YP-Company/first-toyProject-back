@@ -41,7 +41,7 @@ public class SecurityConfig {
          */
         http
                 .csrf(csrf -> csrf.disable()) // StateLess한 rest api를 개발할 것이므로 csrf 공격에 대한 옵션은 끈다.
-//                .addFilter(corsConfig.corsFilter())
+                .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic().disable()
                 .formLogin().disable(); // 스프링 시큐리티에서 제공하는 로그인 페이지를 안쓰기 위해
