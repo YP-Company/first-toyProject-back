@@ -60,16 +60,21 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public boolean isAccountNonExpired() {
+        // 만료되었는지 확인하는 로직
+        // true = 만료되지 않음
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
+        // true = 잠금되지 않음
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
+        // 패스워드가 만료되었는지 확인하는 로직
+        // true = 만료되지 않음
         return true;
     }
 
@@ -88,6 +93,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
+        // OAuth2 인증에서는 사용되지 않는 메서드이므로 null 반환
 //        return (String) attributes.get("sub");
         return null;
     }
