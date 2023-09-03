@@ -1,5 +1,6 @@
 package com.youngpotato.firsttoyprojectback.config;
 
+import com.youngpotato.firsttoyprojectback.common.auth.oauth2.OAuth2SuccessHandler;
 import com.youngpotato.firsttoyprojectback.common.jwt.*;
 import com.youngpotato.firsttoyprojectback.common.auth.oauth2.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-@EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터체인에 등록이 됨.
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -23,6 +24,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final PrincipalOauth2UserService principalOauth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,7 +42,7 @@ public class SecurityConfig {
          * 하지만 토큰의 유효시간이 있기 때문에 안전하다. 위 방법보다는 안전하다고 한다.
          */
         http
-                .csrf(csrf -> csrf.disable()) // StateLess한 rest api를 개발할 것이므로 csrf 공격에 대한 옵션은 끈다.
+                .csrf().disable() // StateLess한 rest api를 개발할 것이므로 csrf 공격에 대한 옵션은 끈다.
                 .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic().disable()
@@ -83,19 +85,14 @@ public class SecurityConfig {
         /** oauth2 */
         http
                 .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization") // 소셜 로그인 요청을 보내는 url을 설정
+                .authorizationEndpoint().baseUri("/oauth2/authorization") // 소셜 로그인 요청을 보내는 url을 설정
                 .and()
-                .redirectionEndpoint()
-                .baseUri("/login/oauth2/code/*") // 소셜 인증 후 redirect 되는 uri
+                .redirectionEndpoint().baseUri("/login/oauth2/code/*") // 소셜 인증 후 redirect 되는 uri
                 .and()
-                .userInfoEndpoint()
-                .userService(principalOauth2UserService) // 회원 정보를 처리하기 위한 클래스 설정
+                .userInfoEndpoint().userService(principalOauth2UserService) // 회원 정보를 처리하기 위한 클래스 설정
                 .and()
-                .defaultSuccessUrl("/api/v1/success-oauth");
-//                .successHandler() // oauth 인증 성공 시 호출되는 handler
-//                .failureHandler(); // oauth 인증 실패 시 호출되는 handler
-//                .authorizationRequestRepository()
+//                .defaultSuccessUrl("/api/v1/success-oauth")
+                .successHandler(oAuth2SuccessHandler); // oauth 인증 성공 시 호출되는 handler
 
         return http.build();
     }

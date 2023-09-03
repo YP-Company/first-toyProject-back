@@ -2,7 +2,6 @@ package com.youngpotato.firsttoyprojectback.common.jwt;
 
 import com.youngpotato.firsttoyprojectback.common.Constants;
 import com.youngpotato.firsttoyprojectback.common.auth.PrincipalDetails;
-import com.youngpotato.firsttoyprojectback.domain.member.Member;
 import com.youngpotato.firsttoyprojectback.domain.member.MemberRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -15,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -88,14 +88,7 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        Member member = memberRepository.findByEmailAndProvider(claims.getSubject(), claims.get("provider").toString());
-        PrincipalDetails principal;
-        if (claims.get("provider").equals(Constants.SYSTEM_STRING)) {
-            principal = new PrincipalDetails(member);
-        } else {
-            // TODO OAuth2 PrincipalDetails 생성자 주입 필요한가?
-            principal = new PrincipalDetails(member);
-        }
+        User principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }

@@ -1,7 +1,6 @@
 package com.youngpotato.firsttoyprojectback.controller;
 
 import com.youngpotato.firsttoyprojectback.common.Constants;
-import com.youngpotato.firsttoyprojectback.common.auth.PrincipalDetails;
 import com.youngpotato.firsttoyprojectback.common.jwt.TokenProvider;
 import com.youngpotato.firsttoyprojectback.dto.LoginDTO;
 import com.youngpotato.firsttoyprojectback.dto.MemberDTO;
@@ -16,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -59,24 +56,9 @@ public class MemberController {
     }
 
     @GetMapping("/success-oauth")
-    public ResponseEntity<?> createTokenForGoogle(@AuthenticationPrincipal OAuth2User oAuth2User) {
-        // TODO OAuth2 회원가입 후 인증 처리 필요
+    public ResponseEntity<?> createToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(oAuth2User == null) {
-            System.out.println("받아올 정보가 없습니다.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("정보가 없어....");
-        } else {
-            System.out.println("oauth2User 정보를 받아오자 : " + oAuth2User);
-
-            // OAuth2User에서 필요한 정보를 추출하여 UserDetails 객체를 생성합니다.
-
-//            String jwt = tokenProvider.createToken(authentication);
-//
-//            ResponseEntity<TokenDTO> token = memberService.createToken(oAuth2User);
-//            log.info("token : " + token);
-
-            return ResponseEntity.ok().body("?");
-        }
+        return null;
     }
 }

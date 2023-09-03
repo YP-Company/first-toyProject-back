@@ -6,7 +6,7 @@ import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.KakaoUser
 import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.NaverUserInfo;
 import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.OAuth2UserInfo;
 import com.youngpotato.firsttoyprojectback.domain.member.Member;
-import com.youngpotato.firsttoyprojectback.service.MemberService;
+import com.youngpotato.firsttoyprojectback.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -23,7 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     /**
      * OAuth2 로그인 처리 (자동 회원가입)
@@ -45,7 +45,27 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new KakaoUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
         }
 
-        Member member = memberService.oauthSignup(oAuth2UserInfo);
+        String email = oAuth2UserInfo.getEmail();
+        String password = "password"; // 무의미 값
+        String nickName = oAuth2UserInfo.getName();
+        String role = "ROLE_USER";
+        String provider = oAuth2UserInfo.getProvider(); // 플랫폼 명
+        String providerId = oAuth2UserInfo.getProviderId(); // 플랫품 id
+
+        Member member = memberRepository.findByEmailAndProvider(email, provider);
+
+        if (member == null) {
+            member = Member.builder()
+                    .email(email)
+                    .password(password)
+                    .nickname(nickName)
+                    .roles(role)
+                    .provider(provider)
+                    .providerId(providerId)
+                    .build();
+
+            memberRepository.save(member);
+        }
 
         return new PrincipalDetails(member, oAuth2User.getAttributes());
     }
