@@ -55,10 +55,14 @@ public class MemberController {
         return new ResponseEntity<>(new TokenDTO(jwt), httpHeaders, HttpStatus.OK);
     }
 
+    /**
+     * OAuth2 로그인 성공시 Token 반환
+     */
     @GetMapping("/success-oauth")
-    public ResponseEntity<?> createToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<TokenDTO> createToken(@RequestParam String token) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(Constants.JWT_HEADER_STRING, Constants.JWT_TOKEN_PREFIX + token);
 
-        return null;
+        return new ResponseEntity<>(new TokenDTO(token), httpHeaders, HttpStatus.OK);
     }
 }

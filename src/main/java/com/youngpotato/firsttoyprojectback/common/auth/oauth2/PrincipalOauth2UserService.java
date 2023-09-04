@@ -8,6 +8,7 @@ import com.youngpotato.firsttoyprojectback.common.auth.oauth2.provider.OAuth2Use
 import com.youngpotato.firsttoyprojectback.domain.member.Member;
 import com.youngpotato.firsttoyprojectback.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * OAuth2 로그인 처리 (자동 회원가입)
@@ -46,7 +48,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         }
 
         String email = oAuth2UserInfo.getEmail();
-        String password = "password"; // 무의미 값
+        String password = bCryptPasswordEncoder.encode("password"); // 무의미 값
         String nickName = oAuth2UserInfo.getName();
         String role = "ROLE_USER";
         String provider = oAuth2UserInfo.getProvider(); // 플랫폼 명
