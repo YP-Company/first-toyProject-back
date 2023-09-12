@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * 정상적인 유저 인증이 완료되면 -> 여기로 오게됨 그 다음에 successhandler로 감
+ * 정상적인 유저 인증이 완료되면 -> 여기로 오게됨 -> 그 다음에 {@link OAuth2SuccessHandler} 감
  */
 @Service
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
             oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
-            oAuth2UserInfo = new KakaoUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
+            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         }
 
         String email = oAuth2UserInfo.getEmail();
