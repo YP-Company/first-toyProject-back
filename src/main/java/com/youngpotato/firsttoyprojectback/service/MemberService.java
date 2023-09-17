@@ -19,9 +19,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    /**
-     * 일반 회원가입
-     */
     public MemberDTO signup(SignUpDTO signUpDto) {
         // 중복 회원가입 처리
         if (memberRepository.findByEmailAndProvider(signUpDto.getEmail(), Constants.SYSTEM_STRING) != null) {
@@ -42,34 +39,5 @@ public class MemberService {
                 .build();
 
         return MemberDTO.from(memberRepository.save(member));
-    }
-
-    /**
-     * 소셜 로그인 (회원가입)
-     */
-    public Member oauthSignup(OAuth2UserInfo oAuth2UserInfo) {
-        String email = oAuth2UserInfo.getEmail();
-        String password = bCryptPasswordEncoder.encode("password"); // 무의미 값
-        String nickName = oAuth2UserInfo.getName();
-        String role = "ROLE_USER";
-        String provider = oAuth2UserInfo.getProvider(); // 플랫폼 명
-        String providerId = oAuth2UserInfo.getProviderId(); // 플랫품 id
-//        String username = provider + "_" + providerId;
-
-        Member member = memberRepository.findByEmailAndProvider(email, provider);
-        if (member == null) {
-            member = Member.builder()
-                    .email(email)
-                    .password(password)
-                    .nickname(nickName)
-                    .roles(role)
-                    .provider(provider)
-                    .providerId(providerId)
-                    .build();
-
-            memberRepository.save(member);
-        }
-
-        return member;
     }
 }

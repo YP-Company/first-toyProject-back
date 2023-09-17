@@ -91,7 +91,6 @@ public class SecurityConfig {
                 .and()
                 .userInfoEndpoint().userService(principalOauth2UserService) // 회원 정보를 처리하기 위한 클래스 설정
                 .and()
-//                .defaultSuccessUrl("/api/v1/success-oauth")
                 .successHandler(oAuth2SuccessHandler); // oauth 인증 성공 시 호출되는 handler
 
         return http.build();

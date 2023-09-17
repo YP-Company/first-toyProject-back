@@ -109,6 +109,7 @@ public class TokenProvider implements InitializingBean {
         } catch (IllegalArgumentException e) {
             logger.info("JWT 토큰이 잘못되었습니다.");
         }
+
         return false;
     }
 }

@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonUtil {
 
+    /**
+     * 로그인 사용자 email 조회
+     */
     public static String getLoginMemberEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
